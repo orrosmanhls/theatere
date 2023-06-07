@@ -1,0 +1,138 @@
+name: CI
+on:
+  workflow_call:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 19.x, 20.x]
+        mongodb-version: ['5.0','6.0']
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Use Node.js ${{ matrix.node-version }}
+        with:
+          fetch-depth: 0
+          node-version: ${{ matrix.node-version }}
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: 'master'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npx nx workspace-lint
+      - run: npx nx run-many --target=lint --parallel=3 --all
+      - run: npx nx run-many --target=build --parallel=3 --all
+      - run: npx nx run-many --target=build-storybook --parallel=3 --all
+      - run: npx nx run-many --target=test --parallel=3 --ci --code-coverage --all --verbose
+      - run: npx nx run-many --target=integration --parallel=3 --all
+
+  e2e-testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 19.x, 20.x]
+        mongodb-version: ['5.0','6.0']
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Use Node.js ${{ matrix.node-version }}
+        with:
+          fetch-depth: 0
+          node-version: ${{ matrix.node-version }}
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        uses: nrwl/nx-set-shas@v3
+        with:
+          main-branch-name: 'master'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@v1.9.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+
+      - name: npm install
+        run: npm ci
+
+      - name: Run server api
+        run: npx nx run server:serve &
+        env:
+          NODE_ENV: develop
+          DATABASE_NAME: e2e-test
+          REGION: eu-west-3
+
+      - name: Run client e2e
+        run: npx nx run client-e2e:e2e
+        env:
+          NX_APP_API_BASE_URL: http://localhost:3000
+          NX_APP_AWS_REGION: eu-west-3
+          NX_APP_AWS_POOL_ID: ${{ secrets.NX_APP_AWS_POOL_ID }}
+          NX_APP_AWS_WEB_CLIENT_ID: ${{ secrets.NX_APP_AWS_WEB_CLIENT_ID }}
+          AWS_COGNITO_USERNAME: ${{ secrets.AWS_COGNITO_USERNAME }}
+          AWS_COGNITO_PASSWORD: ${{ secrets.AWS_COGNITO_PASSWORD }}
+
+  static-code-scan:
+    runs-on: ubuntu-latest
+    name: njsscan code scanning
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+      - name: nodejsscan scan
+        id: njsscan
+        uses: ajinabraham/njsscan-action@master
+        with:
+          args: '.'
+
+  scan-leaks:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - name: Install package with Homebrew
+        run: |
+          brew install gitleaks
+      - name: gitleaks detect
+        run: gitleaks detect --verbose
+
+  TruffleHog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  automerge:
+    needs: [main, static-code-scan, e2e-testing, scan-leaks]
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3.8.0
+        if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

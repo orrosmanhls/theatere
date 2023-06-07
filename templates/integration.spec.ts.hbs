@@ -1,0 +1,79 @@
+import { {{ pascalCase name }}Factory } from './{{kebabCase name}}.factory';
+import { appTest, TestingAppModule } from '../../../test/setup';
+import * as request from 'supertest';
+import { getModelToken } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { {{ pascalCase name }}, {{ pascalCase name }}Document } from '../{{kebabCase name}}.schema';
+import { DocumentStatus } from '@node-monorepo/types';
+import { {{ pascalCase name }}Entity } from '../entities/{{kebabCase name}}.entity';
+
+
+describe('{{camelCase name}} e2e testing', () => {
+  let {{camelCase name}}Model: Model<{{ pascalCase name }}Document>;
+
+  beforeEach(async () => {
+    {{camelCase name}}Model = TestingAppModule.get<Model<{{ pascalCase name }}Document>>(getModelToken({{ pascalCase name }}.name));
+  });
+  it('should get {{camelCase name}} by search params', async () => {
+    //arrange data
+    await {{camelCase name}}Model.insertMany({{ pascalCase name }}Factory.buildList(100));
+    return request(appTest.getHttpServer())
+      .post('/{{kebabCase name}}/search')
+      .send({
+        limit: 5
+      })
+      .expect(200)
+      .then((response) => {
+        const result: {{ pascalCase name }}Entity[] = response.body
+        expect(result.length).toBe(5);
+      });
+  });
+
+  it('should get all', async () => {
+    //arrange data
+    await {{camelCase name}}Model.insertMany({{ pascalCase name }}Factory.buildList(4));
+
+    return request(appTest.getHttpServer())
+      .get('/{{kebabCase name}}')
+      .expect(200)
+      .then(response => {
+        expect(response.body.length).toBe(4);
+      })
+  });
+  it('should create one', async () => {
+    const {{camelCase name}} = {{ pascalCase name }}Factory.build({});
+    await request(appTest.getHttpServer())
+      .post('/{{kebabCase name}}')
+      .send({{camelCase name}})
+      .expect(201);
+    const {{camelCase name}}FromDb = await {{camelCase name}}Model.find({}).lean().exec()
+    expect({{camelCase name}}FromDb.length).toBe(1)
+  });
+
+  it('should get {{camelCase name}} by id', async () => {
+    const {{camelCase name}}Id = new Types.ObjectId()
+    const {{camelCase name}} = {{ pascalCase name }}Factory.build({ _id: {{camelCase name}}Id });
+    await {{camelCase name}}Model.create({{camelCase name}});
+
+    await request(appTest.getHttpServer())
+      .get(`/{{kebabCase name}}/${ {{camelCase name}}Id}`)
+      .expect(200)
+      .then(response => {
+        expect(response.body._id).toEqual({{camelCase name}}Id.toString());
+      });
+  });
+
+  it('should delete {{camelCase name}}', async () => {
+    const {{camelCase name}}Id = new Types.ObjectId()
+    const {{camelCase name}} = {{ pascalCase name }}Factory.build({ _id: {{camelCase name}}Id });
+    await {{camelCase name}}Model.create({{camelCase name}});
+
+    await request(appTest.getHttpServer())
+      .delete(`/{{kebabCase name}}/${ {{camelCase name}}Id}`)
+      .expect(200)
+      .then(async _ => {
+        const deletedUser = await {{camelCase name}}Model.findById({{camelCase name}}Id).lean().exec();
+        expect(deletedUser.status).toEqual(DocumentStatus.DELETED);
+      });
+  });
+});

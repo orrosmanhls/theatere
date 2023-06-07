@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 12.x
+  pre_build:
+    commands:
+      - echo Installing source NPM dependencies...
+      - npm ci
+      - npx nx run server:build:production
+      - cp package-lock.json dist/apps/server/package-lock.json
+      - cp apps/server/Procfile dist/apps/server/Procfile
+      - cd dist/apps/server
+      - npm ci
+# Include only the files required for your application to run.
+artifacts:
+  files:
+    - "**/*"
+  base-directory: "dist/apps/server"

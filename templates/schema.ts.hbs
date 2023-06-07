@@ -1,0 +1,24 @@
+import { Document } from 'mongoose';
+
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { DocumentStatus, I{{ pascalCase name }} } from '@node-monorepo/types';
+
+export type {{ pascalCase name }}Document = I{{ pascalCase name }} & Document;
+
+@Schema({ timestamps: true })
+export class {{ pascalCase name }} {
+  @Prop({ default: DocumentStatus.ACTIVE, enum: DocumentStatus, type: Number })
+  status: DocumentStatus;
+}
+
+export const {{ pascalCase name }}Schema = SchemaFactory.createForClass({{ pascalCase name }});
+
+{{ pascalCase name }}Schema.methods.toJSON = function () {
+  
+  const obj = this.toObject();
+  delete obj.__v;
+  delete obj.createdAt
+  delete obj.updatedAt;
+
+  return obj;
+};

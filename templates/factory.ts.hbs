@@ -1,0 +1,7 @@
+import { DocumentStatus, I{{ pascalCase name }} } from '@node-monorepo/types';
+import { Factory } from 'fishery';
+import { faker } from '@faker-js/faker';
+
+export const {{ pascalCase name }}Factory = Factory.define<I{{ pascalCase name }}>(() => ({
+  status: DocumentStatus.ACTIVE
+}));

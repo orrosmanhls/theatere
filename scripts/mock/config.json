@@ -1,0 +1,122 @@
+[
+  {
+    "database": "mock",
+    "collection": "records",
+    "count": 100,
+    "content": {
+      "_id": {
+        "type": "ref",
+        "id": 10,
+        "refContent": {
+          "type": "objectId"
+        }
+      },
+      "organizationId": {
+        "type": "ref",
+        "id": 1,
+        "refContent": {
+          "type": "objectId"
+        }
+      },
+      "countryId": {
+        "type": "ref",
+        "id": 20,
+        "refContent": {
+          "type": "objectId"
+        }
+      },
+      "reference": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50
+      },
+      "ip": {
+        "type": "int",
+        "minInt": 100000,
+        "maxInt": 999999999
+      },
+      "application": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 20
+      },
+      "filingDate": {
+        "type": "date",
+        "startDate": "2010-01-01T00:00:00+00:00",
+        "endDate": "2011-01-01T00:00:00+00:00"
+      },
+      "grantedDate": {
+        "type": "date",
+        "startDate": "2011-01-01T00:00:00+00:00",
+        "endDate": "2012-03-01T00:00:00+00:00"
+      },
+      "entitySize": {
+        "type": "enum",
+        "values": ["small", "large"]
+      },
+      "meta": {
+        "type": "object",
+        "objectContent": {
+          "type": {
+            "type": "enum",
+            "values": ["patent", "utility model", "utility", "tradmark"]
+          },
+          "title": {
+            "type": "faker",
+            "method": "Word"
+          },
+          "description": {
+            "type": "faker",
+            "method": "Quote"
+          }
+        }
+      },
+      "renewals": {
+        "type": "object",
+        "objectContent": {
+          "date": {
+            "type": "date",
+            "startDate": "2012-03-01T00:00:00+00:00",
+            "endDate": "2022-03-01T00:00:00+00:00"
+          },
+          "renewed": {
+            "type": "constant",
+            "constVal": false
+          }
+        }
+      },
+      "expiaryDate": {
+        "type": "date",
+        "startDate": "2030-01-01T00:00:00+00:00",
+        "endDate": "2035-01-01T00:00:00+00:00"
+      },
+      "recentRenewal": {
+        "type": "constant",
+        "constVal": null
+      },
+      "status": {
+        "type": "int",
+        "minInt": 1,
+        "maxInt": 1
+      },
+      "createdAt": {
+        "type": "date",
+        "startDate": "2019-01-10T00:00:00+00:00",
+        "endDate": "2022-01-01T22:00:00+00:00"
+      },
+      "updatedAt": {
+        "type": "date",
+        "startDate": "2019-01-10T00:00:00+00:00",
+        "endDate": "2022-01-01T22:00:00+00:00"
+      },
+      "__v": {
+        "type": "fromArray",
+        "in": [0, 1, 2]
+      }
+    }
+  }
+]
+
+// ./mgodatagen -f config.json
+//mongodump --host 127.0.0.1 --port=27017  --db mock --out ~/Desktop/dump
+//mongorestore --uri "mongodb+srv://<user>:<password>@<database-remote-address>/<dbname>"  ~/Desktop/dump/mock

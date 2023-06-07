@@ -1,0 +1,63 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { {{ pascalCase name }}Service } from '../{{kebabCase name}}.service';
+import { {{ pascalCase name }} } from '../{{kebabCase name}}.schema';
+import { {{ pascalCase name }}Factory } from './{{kebabCase name}}.factory';
+
+describe('{{ pascalCase name }}Service', () => {
+  let service: {{ pascalCase name }}Service;
+  let model: Model<{{ pascalCase name }}>;
+
+  const {{camelCase name}}Data = {{ pascalCase name }}Factory.build();
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        {{ pascalCase name }}Service,
+        {
+          provide: getModelToken('{{ pascalCase name }}'),
+          useValue: {
+            new: jest.fn().mockResolvedValue({{camelCase name}}Data),
+            constructor: jest.fn().mockResolvedValue({{camelCase name}}Data),
+            findOne: jest.fn(),
+            find: jest.fn(),
+            findById: jest.fn(),
+            updateOne: jest.fn(),
+            updateMany: jest.fn(),
+            aggregate: jest.fn(),
+            schema: jest.fn(),
+            path: jest.fn()
+          }
+        }
+      ]
+    }).compile();
+
+    service = module.get<{{ pascalCase name }}Service>({{ pascalCase name }}Service);
+    model = module.get<Model<{{ pascalCase name }}>>(getModelToken('{{ pascalCase name }}'));
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('should return all {{camelCase name}}s', async () => {
+    jest.spyOn(model, 'find').mockReturnValue([{{camelCase name}}Data] as any);
+    const all{{ pascalCase name }} = await service.findAll();
+    expect(all{{ pascalCase name }}).toEqual([{{camelCase name}}Data]);
+  });
+
+  it('should find {{camelCase name}} by id', async () => {
+    jest.spyOn(model, 'findById').mockReturnValue({{camelCase name}}Data as any);
+    const {{camelCase name}} = await service.findOne('sdfsdfsdfsdf');
+    expect({{camelCase name}}).toEqual({{camelCase name}}Data);
+  });
+  it('should delete {{camelCase name}} by id', async () => {
+    jest.spyOn(model, 'updateOne').mockReturnValue({{camelCase name}}Data as any);
+    jest.spyOn(model, 'findById').mockReturnValue({{camelCase name}}Data as any);
+    const {{camelCase name}} = await service.delete('sdfsdfsd');
+    expect({{camelCase name}}).toEqual({{camelCase name}}Data);
+    return;
+  });
+});

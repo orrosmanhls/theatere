@@ -1,0 +1,67 @@
+import { Model } from 'mongoose';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { DocumentStatus, QueryRequest } from '@node-monorepo/types';
+
+import { {{ pascalCase name }}Document, {{ pascalCase name }} } from './{{kebabCase name}}.schema';
+import { Create{{ pascalCase name }}Dto } from './dto/create-{{kebabCase name}}.dto';
+import { Update{{ pascalCase name }}Dto } from './dto/update-{{kebabCase name}}.dto';
+import { QueryBuilder } from '../../utils/query-builder';
+
+@Injectable()
+export class {{ pascalCase name }}Service {
+  constructor(
+    @InjectModel({{ pascalCase name }}.name)
+    private readonly {{pascalCase name}}Model: Model<{{ pascalCase name }}Document>
+  ) {}
+
+  create(data: Create{{ pascalCase name }}Dto) {
+    return this.{{pascalCase name}}Model.create(data);
+  }
+
+  createMany(data: Create{{ pascalCase name }}Dto[]) {
+    if (data.length == 0) {
+      throw new BadRequestException('Received empty array');
+    }
+    return this.{{pascalCase name}}Model.insertMany(data);
+  }
+
+  update(id: string, data: Update{{ pascalCase name }}Dto) {
+    return this.{{pascalCase name}}Model.updateOne({ _id: id }, data);
+  }
+
+  findAll() {
+    return this.{{pascalCase name}}Model.find({ status: DocumentStatus.ACTIVE });
+  }
+
+  findOne(id: string) {
+    return this.{{pascalCase name}}Model.findById(id);
+  }
+
+  delete(_id: string) {
+    return this.{{pascalCase name}}Model.updateOne({ _id }, { status: DocumentStatus.DELETED });
+  }
+
+  search(query: QueryRequest) {
+    const props = Object.keys(this.{{pascalCase name}}Model.schema.paths);
+    //Return search fields in query
+    const searchQuery = new QueryBuilder()
+      .queryTypeAggregation(true)
+      .filter(query.filter)
+      .searchFields({ word: query.search, searchableFields: props })
+      .limit(query.limit)
+      .skip(query.skip)
+      .sort(query.sort)
+      .build();
+
+    const pipeline = [
+      { $match: { status: DocumentStatus.ACTIVE } },
+      { ...searchQuery.filter },
+      { ...searchQuery.search },
+      { ...searchQuery.sort }
+    ]
+      //Filter empty query objects
+      .filter((item: unknown) => Object.keys(item).length !== 0);
+    return this.{{pascalCase name}}Model.aggregate(pipeline).skip(searchQuery.skip).limit(searchQuery.limit);
+  }
+}

@@ -1,0 +1,17 @@
+---
+- nodejs-extensions:
+  - .js
+
+  template-extensions:
+  - .hbs
+
+  ignore-filenames:
+  - nx.json
+
+  ignore-paths:
+  - __MACOSX
+  - node_modules
+  - dist
+
+  ignore-extensions:
+  - .jsx

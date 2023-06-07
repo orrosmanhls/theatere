@@ -1,0 +1,110 @@
+import { Body, Controller, Delete, Get, Param, HttpCode, Post, Put } from '@nestjs/common';
+import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { {{ pascalCase name }}Entity } from './entities/{{kebabCase name}}.entity';
+import { {{ pascalCase name }}Service } from './{{kebabCase name}}.service';
+import { Create{{ pascalCase name }}Dto } from './dto/create-{{kebabCase name}}.dto';
+import { Update{{ pascalCase name }}Dto } from './dto/update-{{kebabCase name}}.dto';
+import { Search{{ pascalCase name }}Dto } from './dto/search-{{kebabCase name}}.dto';
+
+
+@ApiTags('{{camelCase name}}')
+@Controller('{{camelCase name}}')
+export class {{ pascalCase name }}Controller {
+  constructor(private readonly {{camelCase name}}Service: {{ pascalCase name }}Service) { }
+
+  @ApiOkResponse({
+    type: {{ pascalCase name }}Entity,
+    isArray: true,
+    status: 200,
+    description: 'Get all {{ pascalCase name }} response'
+  })
+  @ApiNotFoundResponse({ description: 'No {{camelCase name}} found' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @Get()
+  async findAll() {
+    return this.{{camelCase name}}Service.findAll();
+  }
+
+  @ApiOkResponse({
+    type: {{ pascalCase name }}Entity,
+    isArray: true,
+    status: 201,
+    description: 'Create User response'
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @Post()
+  async create(@Body() body: Create{{ pascalCase name }}Dto) {
+    return this.{{camelCase name}}Service.create(body);
+  }
+
+
+  @ApiOkResponse({
+    type: {{ pascalCase name }}Entity,
+    isArray: true,
+    status: 200,
+    description: 'Search all {{ pascalCase name }} response'
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error'
+  })
+  @HttpCode(200)
+  @Post('search')
+  async search(@Body() data: Search{{ pascalCase name }}Dto) {
+    const query = {
+      skip: data?.skip || 0, //default
+      limit: data?.limit || 50, //default
+      filter: {},
+      search: data?.search || null,
+    }
+    return this.{{camelCase name}}Service.search(query)
+  }
+
+
+  @ApiOkResponse({
+    type: {{ pascalCase name }}Entity,
+    status: 201,
+    description: 'Update {{ pascalCase name }} by id response'
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() data: Update{{ pascalCase name }}Dto) {
+    return this.{{camelCase name}}Service.update(id, data);
+  }
+
+
+  @ApiOkResponse({
+    type: {{ pascalCase name }}Entity,
+    status: 200,
+    description: 'Get {{ pascalCase name }} by id response'
+  })
+  @ApiNotFoundResponse({ description: 'No user found by ID' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.{{camelCase name}}Service.findOne(id);
+  }
+
+
+
+  @ApiOkResponse({
+    type: {{ pascalCase name }}Entity,
+    status: 200,
+    description: 'Delete {{ pascalCase name }} by id response'
+  })
+  @ApiNotFoundResponse({ description: 'No user found by ID' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error',
+  })
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return this.{{camelCase name}}Service.delete(id);
+  }
+}

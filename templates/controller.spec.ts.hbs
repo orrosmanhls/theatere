@@ -1,0 +1,61 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { {{ pascalCase name }}Entity } from '../entities/{{kebabCase name}}.entity';
+import { {{ pascalCase name }}Controller } from '../{{kebabCase name}}.controller';
+import { {{ pascalCase name }}Service } from '../{{kebabCase name}}.service';
+import { {{ pascalCase name }}Factory } from './{{kebabCase name}}.factory';
+
+describe('{{ pascalCase name }}Controller', () => {
+  let {{camelCase name}}Controller: {{ pascalCase name }}Controller;
+  const paramId = '1';
+  const {{camelCase name}}Data = {{ pascalCase name }}Factory.build({ _id: paramId });
+
+  const mock{{ pascalCase name }}Service = {
+    update: jest.fn(async () => {
+      return {{ pascalCase name }}Entity;
+    }),
+    delete: jest.fn(async () => {
+      return {{ pascalCase name }}Entity;
+    }),
+    findOne: jest.fn(async () => {
+      return {{ pascalCase name }}Entity;
+    }),
+    create: jest.fn(async () => {
+      return {{ pascalCase name }}Entity;
+    }),
+    findAll: jest.fn(async () => {
+      return [{{ pascalCase name }}Entity];
+    })
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [],
+      controllers: [{{ pascalCase name }}Controller],
+      providers: [{{ pascalCase name }}Service]
+    })
+      .overrideProvider({{ pascalCase name }}Service)
+      .useValue(mock{{ pascalCase name }}Service)
+      .compile();
+
+    {{camelCase name}}Controller = module.get<{{ pascalCase name }}Controller>({{ pascalCase name }}Controller);
+  });
+  it('should be defined', () => {
+    expect({{camelCase name}}Controller).toBeDefined();
+  });
+
+  it('should get all', async () => {
+    expect(await {{camelCase name}}Controller.findAll()).toEqual([{{ pascalCase name }}Entity]);
+  });
+  it('should create one', async () => {
+    expect(await {{camelCase name}}Controller.create({{camelCase name}}Data)).toEqual({{ pascalCase name }}Entity);
+  });
+  it('should update user', async () => {
+    expect(await {{camelCase name}}Controller.update(paramId, {{camelCase name}}Data)).toEqual({{ pascalCase name }}Entity);
+  });
+  it('should get user by id', async () => {
+    expect(await {{camelCase name}}Controller.findOne(paramId)).toEqual({{ pascalCase name }}Entity);
+  });
+  it('should delete user', async () => {
+    expect(await {{camelCase name}}Controller.delete(paramId)).toEqual({{ pascalCase name }}Entity);
+  });
+});
