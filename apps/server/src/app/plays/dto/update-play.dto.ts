@@ -1,11 +1,13 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Genres } from 'libs/types/src/lib/plays/plays.enum';
 
 export class UpdatePlayDto {
   @IsString()
   @IsOptional()
+  @IsNotEmpty()
   name: string;
 
-  @IsString()
   @IsOptional()
-  genre: string;
+  @IsEnum(Genres)
+  genre: Genres;
 }

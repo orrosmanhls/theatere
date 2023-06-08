@@ -22,7 +22,7 @@ export class PlaysService {
 
   findOne(_id: string) {
     const objectId = new Types.ObjectId(_id);
-    return this.PlaysModel.findById({ _id: objectId });
+    return this.PlaysModel.findById(objectId);
   }
 
   async create(data: CreatePlayDto) {
@@ -53,7 +53,6 @@ export class PlaysService {
       { ...searchQuery.filter },
       { ...searchQuery.search }
     ].filter((item: unknown) => Object.keys(item).length !== 0);
-    console.log(JSON.stringify(pipeline));
     return this.PlaysModel.aggregate(pipeline);
   }
 }

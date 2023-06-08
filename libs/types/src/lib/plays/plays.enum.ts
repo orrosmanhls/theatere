@@ -1,4 +1,4 @@
 export enum Genres {
-  Drama = 'drama',
-  Comedy = 'comedy'
+  DRAMA = 'Drama',
+  COMEDY = 'Comedy'
 }
