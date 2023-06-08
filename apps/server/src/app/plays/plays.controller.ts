@@ -37,7 +37,7 @@ export class PlaysController {
   async search(@Body() data: SearchPlayDto) {
     const query = {
       filter: data?.filter || {},
-      search: data?.search || ''
+      search: data?.search || null
     };
     return this.playsService.search(query);
   }
