@@ -9,17 +9,19 @@ import { HttpLoggerMiddleware } from '../middlewares/http-logger';
 import { APP_GUARD } from '@nestjs/core';
 import { CognitoAuthGuard } from '../guards/cognito-auth.guard';
 import { CognitoIdentityHandler } from '../providers/aws/cognito.provider';
+import { PlaysModule } from './plays/plays.module';
 
 export const AppModules = [
   // DO NOT DELETE THIS COMMENT PLOP HELPER MODULE
   ItemsModule,
   UsersModule,
-  HealthModule
+  HealthModule,
+  PlaysModule
 ];
 @Module({
   imports: [MongooseConnectionModule, ...AppModules],
   controllers: [],
-  providers: [CognitoIdentityHandler, { provide: APP_GUARD, useClass: CognitoAuthGuard }]
+  providers: []
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
