@@ -89,7 +89,8 @@
         "passWithNoTests": true,
         "runInBand": false,
         "codeCoverage": true,
-        "testPathPattern": ["integration\\.spec.ts$"]
+        "testPathPattern": ["integration\\.spec.ts$"],
+        
       }
     }
   },
