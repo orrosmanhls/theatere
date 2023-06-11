@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Genres } from 'libs/types/src/lib/plays/plays.enum';
+import { Genres } from '@node-monorepo/types';
 
 export class CreatePlayDto {
   @IsString()

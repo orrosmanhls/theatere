@@ -1,7 +1,6 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { DocumentStatus, IPlay } from '@node-monorepo/types';
-import { Genres } from 'libs/types/src/lib/plays/plays.enum';
+import { Genres, DocumentStatus, IPlay } from '@node-monorepo/types';
 
 export type PlaysDocument = IPlay & Document;
 

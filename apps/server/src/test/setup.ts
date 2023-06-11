@@ -5,8 +5,6 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import mongoose from 'mongoose';
 import * as cookieParser from 'cookie-parser';
 import { useContainer } from 'class-validator';
-import { APP_GUARD } from '@nestjs/core';
-import { CognitoAuthGuardMock } from '../guards/cognito-auth-mock.guard';
 
 export let appTest: INestApplication;
 export let TestingAppModule: TestingModule;
@@ -20,7 +18,7 @@ beforeEach(async () => {
   const uri = `${process.env['MONGO_URI']}/${new mongoose.Types.ObjectId().toString()}`;
   TestingAppModule = await Test.createTestingModule({
     imports: [MongooseModule.forRoot(uri), ...AppModules],
-    providers: [{ provide: APP_GUARD, useClass: CognitoAuthGuardMock }, CognitoAuthGuardMock]
+    providers: []
   }).compile();
 
   appTest = TestingAppModule.createNestApplication();

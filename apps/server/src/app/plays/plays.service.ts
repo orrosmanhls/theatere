@@ -1,7 +1,7 @@
 import { Model, Types } from 'mongoose';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DocumentStatus, QueryRequest } from '@node-monorepo/types';
+import { DocumentStatus } from '@node-monorepo/types';
 
 import { PlaysDocument, Plays } from './plays.schema';
 import { CreatePlayDto } from './dto/create-play.dto';
