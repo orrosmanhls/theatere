@@ -73,7 +73,7 @@ describe('plays e2e testing', () => {
   });
 
   it('should get plays by filter', async () => {
-    const comedyPlays = PlaysFactory.buildList(10, { genre: Genres.COMEDY });
+    const comedyPlays = PlaysFactory.buildList(8, { genre: Genres.COMEDY });
     await playsModel.insertMany(comedyPlays);
 
     const dramaPlays = PlaysFactory.buildList(10, { genre: Genres.DRAMA });
@@ -85,7 +85,10 @@ describe('plays e2e testing', () => {
       .expect(201)
       .then((response) => {
         const result = response.body;
-        expect(result.length).toBe(10);
+        expect(result.length).toBe(8);
+        result.forEach((play) => {
+          expect(play.genre).toBe(Genres.COMEDY);
+        });
       });
   });
 
