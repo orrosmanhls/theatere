@@ -7,6 +7,15 @@ export type ActorDocument = IActor & Document;
 
 @Schema({ timestamps: true })
 export class Actor {
+  @Prop({ type: String, required: true })
+  firstName: string;
+
+  @Prop({ type: String, required: true })
+  lastName: string;
+
+  @Prop({ type: Number, required: false })
+  age: number;
+
   @Prop({ default: DocumentStatus.ACTIVE, enum: DocumentStatus, type: Number })
   status: DocumentStatus;
 }
