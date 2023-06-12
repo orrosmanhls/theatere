@@ -24,7 +24,7 @@ export class ActorEntity {
     description: 'age of actor',
     example: 34
   })
-  age: number;
+  age?: number;
 
   @ApiProperty({
     description: 'status of document: ACTIVE | DELETED',
@@ -43,10 +43,4 @@ export class ActorEntity {
     example: '2023-06-12T09:08:11.692Z'
   })
   updatedAt: string;
-
-  @ApiProperty({
-    description: 'document version key',
-    example: 1
-  })
-  __v: number;
 }

@@ -13,8 +13,8 @@ export class Actor {
   @Prop({ type: String, required: true })
   lastName: string;
 
-  @Prop({ type: Number, required: false })
-  age: number;
+  @Prop({ type: Number })
+  age?: number;
 
   @Prop({ default: DocumentStatus.ACTIVE, enum: DocumentStatus, type: Number })
   status: DocumentStatus;

@@ -68,7 +68,7 @@ export class ActorController {
 
   @ApiOkResponse({
     type: ActorEntity,
-    status: 201,
+    status: 200,
     description: 'Update Actor by id response'
   })
   @ApiInternalServerErrorResponse({

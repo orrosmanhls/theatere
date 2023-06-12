@@ -19,13 +19,6 @@ export class ActorService {
     return this.ActorModel.create(data);
   }
 
-  createMany(data: CreateActorDto[]) {
-    if (data.length == 0) {
-      throw new BadRequestException('Received empty array');
-    }
-    return this.ActorModel.insertMany(data);
-  }
-
   update(id: string, data: UpdateActorDto) {
     return this.ActorModel.updateOne({ _id: id }, data);
   }

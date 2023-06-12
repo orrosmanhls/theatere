@@ -60,9 +60,10 @@ describe('actor e2e testing', () => {
       });
   });
   it('should create one', async () => {
-    const actor = ActorFactory.build({ firstName: 'bfgrtd' });
+    const actorFirstName = 'bfgrtd';
+    const actor = ActorFactory.build({ firstName: actorFirstName });
     await request(appTest.getHttpServer()).post('/actor').send(actor).expect(201);
-    const actorFromDb = await actorModel.find({ firstName: 'bfgrtd' }).lean().exec();
+    const actorFromDb = await actorModel.find({ firstName: actorFirstName }).lean().exec();
     expect(actorFromDb.length).toBe(1);
   });
 
@@ -109,7 +110,7 @@ describe('actor e2e testing', () => {
       .send(updateDetails)
       .expect(200);
     const updatedActor = await actorModel.findById(actorFromDb._id);
-    console.log(updatedActor);
+
     expect(updatedActor.firstName).toBe(updateDetails.firstName);
     expect(updatedActor.lastName).toBe(updateDetails.lastName);
     expect(updatedActor.age).toBe(updateDetails.age);
