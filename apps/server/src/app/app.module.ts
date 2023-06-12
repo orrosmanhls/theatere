@@ -1,5 +1,6 @@
 import { FeaturePolicyMiddleware } from './../middlewares/feature-policy';
 // DO NOT DELETE THIS COMMENT PLOP HELPER IMPORT
+import { ShowModule } from './show/show.module';
 import { ActorModule } from './actor/actor.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseConnectionModule } from './mongoose.module';
@@ -9,6 +10,7 @@ import { PlaysModule } from './plays/plays.module';
 
 export const AppModules = [
   // DO NOT DELETE THIS COMMENT PLOP HELPER MODULE
+  ShowModule,
   ActorModule,
   HealthModule,
   PlaysModule
