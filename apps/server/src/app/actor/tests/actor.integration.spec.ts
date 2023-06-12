@@ -89,7 +89,7 @@ describe('actor e2e testing', () => {
     const actor = ActorFactory.build({ _id: actorId });
     await actorModel.create(actor);
 
-    const response = await request(appTest.getHttpServer()).delete(`/actor/${actorId}`).expect(200);
+    await request(appTest.getHttpServer()).delete(`/actor/${actorId}`).expect(200);
 
     const deletedUser = await actorModel.findById(actorId).lean().exec();
     expect(deletedUser.status).toEqual(DocumentStatus.DELETED);
