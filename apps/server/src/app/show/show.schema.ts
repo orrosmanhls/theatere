@@ -20,6 +20,9 @@ export class Show {
 
   @Prop({ type: Date, required: true })
   date: Date;
+
+  @Prop({ type: Number, required: true })
+  seats: number;
 }
 
 export const ShowSchema = SchemaFactory.createForClass(Show);

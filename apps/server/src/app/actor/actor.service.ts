@@ -37,6 +37,7 @@ export class ActorService {
 
   search(query: QueryRequest) {
     const props = Object.keys(this.ActorModel.schema.paths);
+
     //Return search fields in query
     const searchQuery = new QueryBuilder()
       .queryTypeAggregation(true)

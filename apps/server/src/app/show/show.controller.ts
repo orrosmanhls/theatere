@@ -68,7 +68,7 @@ export class ShowController {
 
   @ApiOkResponse({
     type: ShowEntity,
-    status: 201,
+    status: 200,
     description: 'Update Show by id response'
   })
   @ApiInternalServerErrorResponse({
