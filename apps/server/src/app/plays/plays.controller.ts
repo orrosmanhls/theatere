@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
 import { PlaysService } from './plays.service';
 import { CreatePlayDto } from './dto/create-play.dto';
 import { UpdatePlayDto } from './dto/update-play.dto';
@@ -33,6 +33,7 @@ export class PlaysController {
     return this.playsService.delete(id);
   }
 
+  @HttpCode(200)
   @Post('search')
   async search(@Body() data: SearchPlayDto) {
     const query = {
