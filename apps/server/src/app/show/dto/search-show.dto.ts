@@ -1,3 +1,4 @@
+import { QueryRequest } from '@node-monorepo/types';
 import { IsOptional, IsString, Max } from 'class-validator';
 
 export class SearchShowDto {
@@ -9,7 +10,7 @@ export class SearchShowDto {
   skip?: number;
 
   @IsOptional()
-  filter: unknown;
+  filter: QueryRequest['filter'];
 
   @IsString()
   @IsOptional()

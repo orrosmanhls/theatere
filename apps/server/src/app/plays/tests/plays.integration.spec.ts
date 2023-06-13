@@ -82,7 +82,7 @@ describe('plays e2e testing', () => {
     return request(appTest.getHttpServer())
       .post('/plays/search')
       .send({ filter: { genre: [Genres.COMEDY] } })
-      .expect(201)
+      .expect(200)
       .then((response) => {
         const result = response.body;
         expect(result.length).toBe(8);
