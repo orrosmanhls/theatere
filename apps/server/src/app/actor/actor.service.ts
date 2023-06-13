@@ -1,5 +1,5 @@
 import { Model } from 'mongoose';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { DocumentStatus, QueryRequest } from '@node-monorepo/types';
 
@@ -37,6 +37,7 @@ export class ActorService {
 
   search(query: QueryRequest) {
     const props = Object.keys(this.ActorModel.schema.paths);
+
     //Return search fields in query
     const searchQuery = new QueryBuilder()
       .queryTypeAggregation(true)
