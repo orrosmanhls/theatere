@@ -1,12 +1,4 @@
-import {
-  IsArray,
-  IsDate,
-  IsDateString,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Min
-} from 'class-validator';
+import { IsArray, IsDateString, IsIn, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 import { ObjectId } from 'mongoose';
 
 export class CreateShowDto {
@@ -19,8 +11,7 @@ export class CreateShowDto {
   @IsString({ each: true })
   actors: ObjectId[];
 
-  @IsString()
-  @IsNotEmpty()
+  @IsIn(['rubina', 'muskin', 'bartonov'])
   hall: string;
 
   @IsDateString()
@@ -29,4 +20,8 @@ export class CreateShowDto {
   @IsNumber()
   @Min(1)
   seats: number;
+
+  @IsNumber()
+  @Min(0)
+  availableSeats: number;
 }

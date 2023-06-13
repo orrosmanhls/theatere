@@ -34,8 +34,14 @@ export class ShowEntity {
   seats: number;
 
   @ApiProperty({
-    description: '',
-    example: ''
+    description: 'Number of available seats for order',
+    example: 100
+  })
+  availableSeats: number;
+
+  @ApiProperty({
+    description: 'status of document: ACTIVE | DELETED',
+    example: 1
   })
   status: DocumentStatus;
 }

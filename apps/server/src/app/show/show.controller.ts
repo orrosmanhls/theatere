@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, HttpCode, Post, Put } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -10,6 +11,8 @@ import { ShowService } from './show.service';
 import { CreateShowDto } from './dto/create-show.dto';
 import { UpdateShowDto } from './dto/update-show.dto';
 import { SearchShowDto } from './dto/search-show.dto';
+import { PurchaseDto } from './dto/purchase.dto';
+import { CancelDto } from './dto/cancel.dto';
 
 @ApiTags('show')
 @Controller('show')
@@ -84,7 +87,7 @@ export class ShowController {
     status: 200,
     description: 'Get Show by id response'
   })
-  @ApiNotFoundResponse({ description: 'No user found by ID' })
+  @ApiNotFoundResponse({ description: 'No show found by ID' })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error'
   })
@@ -98,12 +101,46 @@ export class ShowController {
     status: 200,
     description: 'Delete Show by id response'
   })
-  @ApiNotFoundResponse({ description: 'No user found by ID' })
+  @ApiNotFoundResponse({ description: 'No show found by ID' })
   @ApiInternalServerErrorResponse({
     description: 'Internal server error'
   })
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.showService.delete(id);
+  }
+
+  @ApiOkResponse({
+    type: ShowEntity,
+    status: 200,
+    description: 'Purchase tickets to show'
+  })
+  @ApiNotFoundResponse({ description: 'No show found by ID' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error'
+  })
+  @ApiBadRequestResponse({
+    description: 'Requested amount exceeds limit'
+  })
+  @Put(':id/purchase')
+  async purchase(@Param('id') id: string, @Body() amount: PurchaseDto) {
+    return this.showService.purchase(id, amount);
+  }
+
+  @ApiOkResponse({
+    type: ShowEntity,
+    status: 200,
+    description: 'Cancel tickets to show'
+  })
+  @ApiNotFoundResponse({ description: 'No show found by ID' })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal server error'
+  })
+  @ApiBadRequestResponse({
+    description: 'Requested amount exceeds limit'
+  })
+  @Put(':id/cancel')
+  async cancel(@Param('id') id: string, @Body() amount: CancelDto) {
+    return this.showService.cancel(id, amount);
   }
 }

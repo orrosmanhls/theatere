@@ -1,12 +1,14 @@
 import { Model } from 'mongoose';
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DocumentStatus, QueryRequest } from '@node-monorepo/types';
+import { DocumentStatus, IShow, QueryRequest } from '@node-monorepo/types';
 
 import { ShowDocument, Show } from './show.schema';
 import { CreateShowDto } from './dto/create-show.dto';
 import { UpdateShowDto } from './dto/update-show.dto';
 import { QueryBuilder } from '../../utils/query-builder';
+import { PurchaseDto } from './dto/purchase.dto';
+import { CancelDto } from './dto/cancel.dto';
 
 @Injectable()
 export class ShowService {
@@ -17,13 +19,6 @@ export class ShowService {
 
   create(data: CreateShowDto) {
     return this.ShowModel.create(data);
-  }
-
-  createMany(data: CreateShowDto[]) {
-    if (data.length == 0) {
-      throw new BadRequestException('Received empty array');
-    }
-    return this.ShowModel.insertMany(data);
   }
 
   update(id: string, data: UpdateShowDto) {
@@ -40,6 +35,28 @@ export class ShowService {
 
   delete(_id: string) {
     return this.ShowModel.updateOne({ _id }, { status: DocumentStatus.DELETED });
+  }
+
+  async purchase(_id: string, data: PurchaseDto) {
+    const show: IShow = await this.ShowModel.findById(_id).lean().exec();
+    if (!show) {
+      throw new NotFoundException();
+    }
+    if (data.amount > show.availableSeats) {
+      throw new BadRequestException('');
+    }
+    return this.ShowModel.updateOne({ _id }, { availableSeats: show.availableSeats - data.amount });
+  }
+
+  async cancel(_id: string, data: CancelDto) {
+    const show: IShow = await this.ShowModel.findById(_id).lean().exec();
+    if (!show) {
+      throw new NotFoundException();
+    }
+    if (data.amount > show.seats - show.availableSeats) {
+      throw new BadRequestException('');
+    }
+    return this.ShowModel.updateOne({ _id }, { availableSeats: show.availableSeats + data.amount });
   }
 
   search(query: QueryRequest) {
