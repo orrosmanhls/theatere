@@ -11,7 +11,7 @@ jobs:
         id: release
         with:
           release-type: node
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Develop Deployment
         if: ${{ steps.release.outputs.release_created }}
         run: |
