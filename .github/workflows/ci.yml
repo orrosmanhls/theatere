@@ -15,7 +15,7 @@ jobs:
         mongodb-version: ['5.0','6.0']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Use Node.js ${{ matrix.node-version }}
         with:
           fetch-depth: 0
@@ -43,7 +43,7 @@ jobs:
         mongodb-version: ['5.0','6.0']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         name: Use Node.js ${{ matrix.node-version }}
         with:
           fetch-depth: 0
@@ -86,7 +86,7 @@ jobs:
     name: njsscan code scanning
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: nodejsscan scan
         id: njsscan
         uses: ajinabraham/njsscan-action@master
@@ -96,7 +96,7 @@ jobs:
   scan-leaks:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Install Homebrew
@@ -112,7 +112,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: TruffleHog OSS
